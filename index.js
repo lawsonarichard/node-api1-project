@@ -59,4 +59,22 @@ server.get("/api/users/:id", (req, res) => {
     });
 });
 
+server.delete("/api/users/:id", (req, res) => {
+  Users.remove(req.params.id)
+    .then(user => {
+      if (user && user > 0) {
+        res.status(200).json(user);
+      } else {
+        res
+          // If the user with the specified id is not found
+          .status(404)
+          .json({ message: "The user with the specified ID does not exist." });
+      }
+    })
+    .catch(() => {
+      // If there's an error in removing the user from the database
+      res.status(500).json({ error: "The user could not be removed" });
+    });
+});
+
 server.listen(5000, () => console.log(`\nAPI on port 5000\n`));
